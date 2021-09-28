@@ -9,12 +9,13 @@ Author URI: https://victorcrespo.net
 
 if ( ! defined( 'ABSPATH' ) ) die();
 
-use vk_templates\Template;
+define( 'CF7_YACHT_ADDON_PATH', plugin_dir_path( __FILE__ ) );
 
-if( ! defined( 'CF7_YACHT_ADDON_PATH' ) )
-    define( 'CF7_YACHT_ADDON_PATH', plugin_dir_path(__FILE__) );
-
+require_once 'includes/vk_template/class_vk_template.php';
 require_once 'classes/class_cfya_admin.php';
+require_once 'classes/class_cfya_public.php';
+
+use vk_templates\Template;
 
 class Cf7_Yacht_Addon
 {
@@ -32,11 +33,18 @@ class Cf7_Yacht_Addon
         $this->plugin_name = 'CF7_Yacht_Add_on';
         $this->plugin_version = '1.0.0';
 
-        $this->admin = new CFYA_Admin();
+        $template = new Template();
+        $file = CF7_YACHT_ADDON_PATH . 'views/admin_dashboard.php';
+
+        $this->admin = new CFYA_Admin( $template, $file );
+        $this->public = new CFYA_Public();
 
         /* Admin hooks */
         add_action( 'admin_menu', [$this->admin, 'register_page'] );
         add_action( 'admin_init', [$this->admin, 'register_settings'] );
+
+        /* Public hooks */
+        add_filter( 'wpcf7_form_elements', [$this->public, 'add_yacht_name'] );
 
     }
 

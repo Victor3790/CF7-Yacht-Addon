@@ -4,12 +4,21 @@
 */
 if ( ! defined( 'ABSPATH' ) ) die();
 
-require_once CF7_YACHT_ADDON_PATH . 'includes/vk_template/class_vk_template.php';
-
 use vk_templates\Template;
 
 class CFYA_Admin
 {
+
+    private $template;
+    private $template_file;
+
+    public function __construct( Template $template, $template_file )
+    {
+
+        $this->template = $template;
+        $this->template_file = $template_file;
+
+    }
 
     public function register_page()
     {
@@ -29,10 +38,7 @@ class CFYA_Admin
     public function load_dashboard()
     {
 
-        $file = CF7_YACHT_ADDON_PATH . 'views/admin_dashboard.php';
-        $template = new Template();
-
-        $view = $template->load( $file );
+        $view = $this->template->load( $this->template_file );
         echo $view;
 
     }
